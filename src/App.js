@@ -1,23 +1,26 @@
-import logo from './logo.svg';
-import './App.css';
-
-function App() {
+import React,{useState} from'react'
+import Products from './Products'
+const App = () => {
+  const [search,setSearch]=useState("")
+  const [data,setData]=useState([])
+  const submitHandler = e =>{
+    e.preventDefault();
+    fetch(`https://api.edamam.com/search?&q=${search}&app_id=199280a0&app_key=64b83db5c9e4f080806670d426d47ef8&from=0&to=19`).then(
+      Response=>Response.json()
+    ).then(
+      data=>setData(data.hits)
+    )
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <center>
+      <h2>Food Recipe</h2>
+      <form onSubmit={submitHandler}>
+      <input type="text" value={search} onChange={(e)=>setSearch(e.target.value)}/> <br />
+      <input type="submit" className="btn btn-primary" value="Search"/>
+      </form>
+      {data.length>=1?<Products data={data}/>:null}
+      </center>
     </div>
   );
 }
